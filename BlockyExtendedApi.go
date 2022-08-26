@@ -2,6 +2,7 @@ package main
 
 import (
 	"BlockyExtendedApi/config"
+	"BlockyExtendedApi/database"
 	"BlockyExtendedApi/gafam"
 	"fmt"
 )
@@ -11,4 +12,6 @@ func main() {
 	fmt.Println(fmt.Sprintf("Loaded %d different gafam companies", len(gafam.LoadedGafam)))
 	// print the port number which will call the func to load the config
 	fmt.Println(fmt.Sprintf("Running HTTP Server on: 0.0.0.0:%d", config.LoadedConfig.Port))
+	// connect to the database
+	database.ConnectToDatabase()
 }
