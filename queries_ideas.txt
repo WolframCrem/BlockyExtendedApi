@@ -1,0 +1,2 @@
+# select queries from past 10 minuites
+select * from log_entries where request_ts > now() - interval 10 minute;
