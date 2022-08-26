@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var Gafam = loadGafamData()
+var LoadedGafam = loadGafamData()
 
 const DataUrl string = "https://raw.githubusercontent.com/WolframCrem/BlockyExtendedApi/main/metadata/gafan.json"
 

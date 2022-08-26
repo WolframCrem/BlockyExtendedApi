@@ -9,7 +9,7 @@ import (
 	os "os"
 )
 
-var Config = ConfigData{}
+var LoadedConfig = LoadConfigData()
 
 func LoadConfigData() ConfigData {
 	// read flag
