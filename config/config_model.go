@@ -6,5 +6,6 @@ type ConfigData struct {
 		Target           string `yaml:"target"`
 		LogRetentionDays int    `yaml:"logRetentionDays"`
 	} `yaml:"database"`
-	Port int `yaml:"port"`
+	Port   int    `yaml:"port"`
+	apiKey string `yaml:"apiKey"`
 }

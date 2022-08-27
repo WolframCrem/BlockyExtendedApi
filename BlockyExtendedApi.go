@@ -14,4 +14,8 @@ func main() {
 	fmt.Println(fmt.Sprintf("Running HTTP Server on: 0.0.0.0:%d", config.LoadedConfig.Port))
 	// connect to the database
 	database.ConnectToDatabase()
+	// start http server
+	var _, result = database.GetTopClients()
+	fmt.Println(len(result))
+	fmt.Println("")
 }

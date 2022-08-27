@@ -2,29 +2,29 @@ package database
 
 import (
 	"BlockyExtendedApi/config"
+	"database/sql"
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 )
 
-var DB *gorm.DB
+var DB *sql.DB
 
 func ConnectToDatabase() {
 	// check which type is selected
 	switch config.LoadedConfig.Database.Type {
 	case "mysql":
-		db, err := gorm.Open(mysql.New(mysql.Config{
-			DSN:                       config.LoadedConfig.Database.Target,
-			DefaultStringSize:         256,
-			DisableDatetimePrecision:  true,
-			DontSupportRenameIndex:    true,
-			DontSupportRenameColumn:   true,
-			SkipInitializeWithVersion: false,
-		}), &gorm.Config{})
+		db, err := sql.Open("mysql", config.LoadedConfig.Database.Target)
 		if err != nil {
 			log.Fatalln(err)
 		}
+		err = db.Ping()
+
+		// handle error
+		if err != nil {
+			log.Fatalln(err)
+		}
+
 		DB = db
 		fmt.Println("Connected to the database!")
 		break

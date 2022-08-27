@@ -1,2 +1,8 @@
 # select queries from past 10 minuites
 select * from log_entries where request_ts > now() - interval 10 minute;
+
+# get top clients
+SELECT client_name, COUNT(*) AS count FROM log_entries GROUP BY client_name ORDER BY count DESC
+
+# get top domains queried
+SELECT question_name, COUNT(*) AS count FROM log_entries GROUP BY question_name ORDER BY count DESC
