@@ -6,31 +6,31 @@ import (
 	"BlockyExtendedApi/models"
 )
 
-func GetTotalRequested(days int) (int64, error) {
+func GetTotalRequested(days int) (error, int) {
 	stmt, err := DB.Prepare("SELECT COUNT(*) AS count_blocked_queries FROM log_entries WHERE request_ts > now() - INTERVAL ? DAY;")
 	if err != nil {
-		return 0, err
+		return err, 0
 	} else {
-		var countBlockedQueries int64
+		var countBlockedQueries int
 		err := stmt.QueryRow(days).Scan(&countBlockedQueries)
 		if err != nil {
-			return 0, err
+			return err, 0
 		}
-		return countBlockedQueries, nil
+		return nil, countBlockedQueries
 	}
 }
 
-func GetTotalBlocked(days int) (int64, error) {
+func GetTotalBlocked(days int) (error, int) {
 	stmt, err := DB.Prepare("SELECT COUNT(*) AS count_blocked_queries FROM log_entries WHERE response_type = 'BLOCKED' AND request_ts > now() - INTERVAL ? DAY;")
 	if err != nil {
-		return 0, err
+		return err, 0
 	} else {
-		var countBlockedQueries int64
+		var countBlockedQueries int
 		err := stmt.QueryRow(days).Scan(&countBlockedQueries)
 		if err != nil {
-			return 0, err
+			return err, 0
 		}
-		return countBlockedQueries, nil
+		return nil, countBlockedQueries
 	}
 }
 func GetGafamStats() (error, []gafam.GafamStats) {

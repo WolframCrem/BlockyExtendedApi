@@ -4,7 +4,10 @@ import (
 	"BlockyExtendedApi/config"
 	"BlockyExtendedApi/database"
 	"BlockyExtendedApi/gafam"
+	"BlockyExtendedApi/handlers"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
+	"log"
 )
 
 func main() {
@@ -14,8 +17,10 @@ func main() {
 	fmt.Println(fmt.Sprintf("Running HTTP Server on: 0.0.0.0:%d", config.LoadedConfig.Port))
 	// connect to the database
 	database.ConnectToDatabase()
-	// start http server
-	var _, result = database.GetTopClients()
-	fmt.Println(len(result))
-	fmt.Println("")
+	// start API server
+	app := fiber.New()
+
+	app.Get("/v1/stats/", handlers.GetStats)
+
+	log.Fatal(app.Listen(fmt.Sprintf(":%d", config.LoadedConfig.Port)))
 }
