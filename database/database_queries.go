@@ -1,6 +1,6 @@
 package database
 
-mport (
+import (
 	"BlockyExtendedApi/enums"
 	"BlockyExtendedApi/gafam"
 	"BlockyExtendedApi/models"
