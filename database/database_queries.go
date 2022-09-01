@@ -1,6 +1,6 @@
 package database
 
-import (
+mport (
 	"BlockyExtendedApi/enums"
 	"BlockyExtendedApi/gafam"
 	"BlockyExtendedApi/models"
@@ -8,7 +8,8 @@ import (
 
 func GetTotalRequested(days int) (error, int) {
 	stmt, err := DB.Prepare("SELECT COUNT(*) AS count_blocked_queries FROM log_entries WHERE request_ts > now() - INTERVAL ? DAY;")
-	if err != nil {
+	defer stmt.Close()
+        if err != nil {
 		return err, 0
 	} else {
 		var countBlockedQueries int
@@ -22,7 +23,8 @@ func GetTotalRequested(days int) (error, int) {
 
 func GetTotalBlocked(days int) (error, int) {
 	stmt, err := DB.Prepare("SELECT COUNT(*) AS count_blocked_queries FROM log_entries WHERE response_type = 'BLOCKED' AND request_ts > now() - INTERVAL ? DAY;")
-	if err != nil {
+	defer stmt.Close()
+        if err != nil {
 		return err, 0
 	} else {
 		var countBlockedQueries int
