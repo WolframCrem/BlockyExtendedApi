@@ -1,8 +1,4 @@
-# select queries from past 10 minuites
-select * from log_entries where request_ts > now() - interval 10 minute;
-
-# get top clients
-SELECT client_name, COUNT(*) AS count FROM log_entries GROUP BY client_name ORDER BY count DESC
-
+# get everything from timestamp
+SELECT client_name, response_type, question_name, duration_ms,request_ts FROM log_entries WHERE request_ts <= "2022-09-04 15:27:48.703" ORDER BY request_ts DESC;
 # get top domains queried
 SELECT question_name, COUNT(*) AS count FROM log_entries GROUP BY question_name ORDER BY count DESC

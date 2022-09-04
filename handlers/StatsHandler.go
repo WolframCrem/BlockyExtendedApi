@@ -7,6 +7,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func GetRecentLogs(c *fiber.Ctx) error {
+	timestamp := c.Query("last")
+	err, response := database.GetRecentLogs(timestamp)
+	if err != nil {
+		return err
+	}
+	responseJson, err := json.Marshal(response)
+	if err != nil {
+		return err
+	}
+	err = c.SendString(string(responseJson))
+	c.Status(200)
+	return nil
+}
+
 func GetStats(c *fiber.Ctx) error {
 
 	// get blocked requests

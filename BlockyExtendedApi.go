@@ -21,6 +21,7 @@ func main() {
 	app := fiber.New()
 
 	app.Get("/v1/stats/", handlers.GetStats)
+	app.Get("/v1/logs/recent", handlers.GetRecentLogs)
 
 	log.Fatal(app.Listen(fmt.Sprintf(":%d", config.LoadedConfig.Port)))
 }

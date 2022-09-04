@@ -4,6 +4,7 @@ import (
 	"BlockyExtendedApi/enums"
 	"BlockyExtendedApi/gafam"
 	"BlockyExtendedApi/models"
+	"database/sql"
 )
 
 func GetTotalRequested(days int) (error, int) {
@@ -96,4 +97,51 @@ func GetTopClients() (error, []models.Client) {
 		clients = append(clients, models.Client{Name: name, Count: count})
 	}
 	return nil, clients
+}
+
+func GetRecentLogs(timestamp string) (error, models.LogResponse) {
+	var query = ""
+	// set query to one with no timestamp if none is received
+	if timestamp == "" {
+		query = "SELECT client_name, response_type, question_name, duration_ms, request_ts FROM log_entries ORDER BY request_ts DESC LIMIT 50;"
+	} else {
+		// query = "SELECT client_name, response_type, question_name, duration_ms, request_ts FROM log_entries WHERE request_ts <= ? ORDER BY request_ts DESC LIMIT 50;"
+		query = "SELECT client_name, response_type, question_name, duration_ms, request_ts FROM log_entries WHERE request_ts < ? ORDER BY request_ts DESC LIMIT 50;"
+	}
+	stmt, err := DB.Prepare(query)
+	var result *sql.Rows
+	if timestamp == "" {
+		result, err = stmt.Query()
+		if err != nil {
+			return err, models.LogResponse{}
+		}
+	} else {
+		result, err = stmt.Query(timestamp)
+		if err != nil {
+			return err, models.LogResponse{}
+		}
+	}
+
+	var response = models.LogResponse{}
+	var latestTimestamp = ""
+	for result.Next() {
+		var clientName = ""
+		var responseType = ""
+		var question = ""
+		var duration = ""
+		var RequestTs = ""
+		err := result.Scan(&clientName, &responseType, &question, &duration, &RequestTs)
+		if err != nil {
+			return err, models.LogResponse{}
+		}
+		response.Logs = append(response.Logs, models.Log{ClientName: clientName, Duration: 0, ResponseType: responseType, Question: question})
+		latestTimestamp = RequestTs
+	}
+
+	defer stmt.Close()
+	if err != nil {
+		return err, models.LogResponse{}
+	}
+	response.LastTimestamp = latestTimestamp
+	return nil, response
 }
